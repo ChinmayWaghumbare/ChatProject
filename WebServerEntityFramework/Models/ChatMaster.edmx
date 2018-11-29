@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ChatMasterModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CONNECTIONS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FROM_USER" Type="int" />
+          <Property Name="TO_USER" Type="int" />
+        </EntityType>
+        <EntityType Name="LOGIN">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UID" Type="varchar" MaxLength="20" />
+          <Property Name="UPWD" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="MESSAGEMAST">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TO_USER" Type="int" Nullable="false" />
+          <Property Name="FROM_USER" Type="int" Nullable="false" />
+          <Property Name="MSG" Type="varchar" MaxLength="200" />
+          <Property Name="PARTIAL" Type="bit" />
+          <Property Name="SENDTIME" Type="datetime" />
+          <Property Name="DELIVERED" Type="bit" />
+        </EntityType>
+        <EntityType Name="ONLINEUSERS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="USERID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="USERINFO">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="USER_NAME" Type="varchar" MaxLength="20" />
+          <Property Name="LOGIN_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__MESSAGEMA__FROM___7F2BE32F">
+          <End Role="USERINFO" Type="Self.USERINFO" Multiplicity="1" />
+          <End Role="MESSAGEMAST" Type="Self.MESSAGEMAST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USERINFO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MESSAGEMAST">
+              <PropertyRef Name="FROM_USER" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__MESSAGEMA__TO_US__7E37BEF6">
+          <End Role="USERINFO" Type="Self.USERINFO" Multiplicity="1" />
+          <End Role="MESSAGEMAST" Type="Self.MESSAGEMAST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USERINFO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MESSAGEMAST">
+              <PropertyRef Name="TO_USER" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ONLINEUSE__USERI__7B5B524B">
+          <End Role="USERINFO" Type="Self.USERINFO" Multiplicity="1" />
+          <End Role="ONLINEUSERS" Type="Self.ONLINEUSERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USERINFO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ONLINEUSERS">
+              <PropertyRef Name="USERID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__USERINFO__LOGIN___5FB337D6">
+          <End Role="LOGIN" Type="Self.LOGIN" Multiplicity="1" />
+          <End Role="USERINFO" Type="Self.USERINFO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LOGIN">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="USERINFO">
+              <PropertyRef Name="LOGIN_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ChatMasterModelStoreContainer">
+          <EntitySet Name="LOGIN" EntityType="Self.LOGIN" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MESSAGEMAST" EntityType="Self.MESSAGEMAST" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ONLINEUSERS" EntityType="Self.ONLINEUSERS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USERINFO" EntityType="Self.USERINFO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CONNECTIONS" EntityType="Self.CONNECTIONS" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CONNECTIONS].[ID] AS [ID], 
+    [CONNECTIONS].[FROM_USER] AS [FROM_USER], 
+    [CONNECTIONS].[TO_USER] AS [TO_USER]
+    FROM [dbo].[CONNECTIONS] AS [CONNECTIONS]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__MESSAGEMA__FROM___7F2BE32F" Association="Self.FK__MESSAGEMA__FROM___7F2BE32F">
+            <End Role="USERINFO" EntitySet="USERINFO" />
+            <End Role="MESSAGEMAST" EntitySet="MESSAGEMAST" />
+          </AssociationSet>
+          <AssociationSet Name="FK__MESSAGEMA__TO_US__7E37BEF6" Association="Self.FK__MESSAGEMA__TO_US__7E37BEF6">
+            <End Role="USERINFO" EntitySet="USERINFO" />
+            <End Role="MESSAGEMAST" EntitySet="MESSAGEMAST" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ONLINEUSE__USERI__7B5B524B" Association="Self.FK__ONLINEUSE__USERI__7B5B524B">
+            <End Role="USERINFO" EntitySet="USERINFO" />
+            <End Role="ONLINEUSERS" EntitySet="ONLINEUSERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__USERINFO__LOGIN___5FB337D6" Association="Self.FK__USERINFO__LOGIN___5FB337D6">
+            <End Role="LOGIN" EntitySet="LOGIN" />
+            <End Role="USERINFO" EntitySet="USERINFO" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ChatMasterModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="LOGIN">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UPWD" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="USERINFOes" Relationship="Self.FK__USERINFO__LOGIN___5FB337D6" FromRole="LOGIN" ToRole="USERINFO" />
+        </EntityType>
+        <EntityType Name="MESSAGEMAST">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TO_USER" Type="Int32" Nullable="false" />
+          <Property Name="FROM_USER" Type="Int32" Nullable="false" />
+          <Property Name="MSG" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PARTIAL" Type="Boolean" />
+          <Property Name="SENDTIME" Type="DateTime" Precision="3" />
+          <Property Name="DELIVERED" Type="Boolean" />
+          <NavigationProperty Name="USERINFO" Relationship="Self.FK__MESSAGEMA__FROM___7F2BE32F" FromRole="MESSAGEMAST" ToRole="USERINFO" />
+          <NavigationProperty Name="USERINFO1" Relationship="Self.FK__MESSAGEMA__TO_US__7E37BEF6" FromRole="MESSAGEMAST" ToRole="USERINFO" />
+        </EntityType>
+        <EntityType Name="ONLINEUSER">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="USERID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="USERINFO" Relationship="Self.FK__ONLINEUSE__USERI__7B5B524B" FromRole="ONLINEUSERS" ToRole="USERINFO" />
+        </EntityType>
+        <EntityType Name="USERINFO">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="USER_NAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LOGIN_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="LOGIN" Relationship="Self.FK__USERINFO__LOGIN___5FB337D6" FromRole="USERINFO" ToRole="LOGIN" />
+          <NavigationProperty Name="MESSAGEMASTs" Relationship="Self.FK__MESSAGEMA__FROM___7F2BE32F" FromRole="USERINFO" ToRole="MESSAGEMAST" />
+          <NavigationProperty Name="MESSAGEMASTs1" Relationship="Self.FK__MESSAGEMA__TO_US__7E37BEF6" FromRole="USERINFO" ToRole="MESSAGEMAST" />
+          <NavigationProperty Name="ONLINEUSERS" Relationship="Self.FK__ONLINEUSE__USERI__7B5B524B" FromRole="USERINFO" ToRole="ONLINEUSERS" />
+        </EntityType>
+        <EntityType Name="CONNECTION">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FROM_USER" Type="Int32" />
+          <Property Name="TO_USER" Type="Int32" />
+        </EntityType>
+        <Association Name="FK__USERINFO__LOGIN___5FB337D6">
+          <End Role="LOGIN" Type="Self.LOGIN" Multiplicity="1" />
+          <End Role="USERINFO" Type="Self.USERINFO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LOGIN">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="USERINFO">
+              <PropertyRef Name="LOGIN_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__MESSAGEMA__FROM___7F2BE32F">
+          <End Role="USERINFO" Type="Self.USERINFO" Multiplicity="1" />
+          <End Role="MESSAGEMAST" Type="Self.MESSAGEMAST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USERINFO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MESSAGEMAST">
+              <PropertyRef Name="FROM_USER" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__MESSAGEMA__TO_US__7E37BEF6">
+          <End Role="USERINFO" Type="Self.USERINFO" Multiplicity="1" />
+          <End Role="MESSAGEMAST" Type="Self.MESSAGEMAST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USERINFO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MESSAGEMAST">
+              <PropertyRef Name="TO_USER" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ONLINEUSE__USERI__7B5B524B">
+          <End Role="USERINFO" Type="Self.USERINFO" Multiplicity="1" />
+          <End Role="ONLINEUSERS" Type="Self.ONLINEUSER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USERINFO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ONLINEUSERS">
+              <PropertyRef Name="USERID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ChatMasterEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="LOGINs" EntityType="Self.LOGIN" />
+          <EntitySet Name="MESSAGEMASTs" EntityType="Self.MESSAGEMAST" />
+          <EntitySet Name="ONLINEUSERS" EntityType="Self.ONLINEUSER" />
+          <EntitySet Name="USERINFOes" EntityType="Self.USERINFO" />
+          <EntitySet Name="CONNECTIONS" EntityType="Self.CONNECTION" />
+          <AssociationSet Name="FK__USERINFO__LOGIN___5FB337D6" Association="Self.FK__USERINFO__LOGIN___5FB337D6">
+            <End Role="LOGIN" EntitySet="LOGINs" />
+            <End Role="USERINFO" EntitySet="USERINFOes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__MESSAGEMA__FROM___7F2BE32F" Association="Self.FK__MESSAGEMA__FROM___7F2BE32F">
+            <End Role="USERINFO" EntitySet="USERINFOes" />
+            <End Role="MESSAGEMAST" EntitySet="MESSAGEMASTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__MESSAGEMA__TO_US__7E37BEF6" Association="Self.FK__MESSAGEMA__TO_US__7E37BEF6">
+            <End Role="USERINFO" EntitySet="USERINFOes" />
+            <End Role="MESSAGEMAST" EntitySet="MESSAGEMASTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ONLINEUSE__USERI__7B5B524B" Association="Self.FK__ONLINEUSE__USERI__7B5B524B">
+            <End Role="USERINFO" EntitySet="USERINFOes" />
+            <End Role="ONLINEUSERS" EntitySet="ONLINEUSERS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ChatMasterModelStoreContainer" CdmEntityContainer="ChatMasterEntities">
+          <EntitySetMapping Name="LOGINs">
+            <EntityTypeMapping TypeName="ChatMasterModel.LOGIN">
+              <MappingFragment StoreEntitySet="LOGIN">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+                <ScalarProperty Name="UPWD" ColumnName="UPWD" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MESSAGEMASTs">
+            <EntityTypeMapping TypeName="ChatMasterModel.MESSAGEMAST">
+              <MappingFragment StoreEntitySet="MESSAGEMAST">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="TO_USER" ColumnName="TO_USER" />
+                <ScalarProperty Name="FROM_USER" ColumnName="FROM_USER" />
+                <ScalarProperty Name="MSG" ColumnName="MSG" />
+                <ScalarProperty Name="PARTIAL" ColumnName="PARTIAL" />
+                <ScalarProperty Name="SENDTIME" ColumnName="SENDTIME" />
+                <ScalarProperty Name="DELIVERED" ColumnName="DELIVERED" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ONLINEUSERS">
+            <EntityTypeMapping TypeName="ChatMasterModel.ONLINEUSER">
+              <MappingFragment StoreEntitySet="ONLINEUSERS">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="USERID" ColumnName="USERID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USERINFOes">
+            <EntityTypeMapping TypeName="ChatMasterModel.USERINFO">
+              <MappingFragment StoreEntitySet="USERINFO">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="USER_NAME" ColumnName="USER_NAME" />
+                <ScalarProperty Name="LOGIN_ID" ColumnName="LOGIN_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CONNECTIONS">
+            <EntityTypeMapping TypeName="ChatMasterModel.CONNECTION">
+              <MappingFragment StoreEntitySet="CONNECTIONS">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FROM_USER" ColumnName="FROM_USER" />
+                <ScalarProperty Name="TO_USER" ColumnName="TO_USER" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

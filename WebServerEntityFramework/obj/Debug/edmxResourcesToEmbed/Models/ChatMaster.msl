@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ChatMasterModelStoreContainer" CdmEntityContainer="ChatMasterEntities">
+    <EntitySetMapping Name="LOGINs">
+      <EntityTypeMapping TypeName="ChatMasterModel.LOGIN">
+        <MappingFragment StoreEntitySet="LOGIN">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="UID" ColumnName="UID" />
+          <ScalarProperty Name="UPWD" ColumnName="UPWD" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MESSAGEMASTs">
+      <EntityTypeMapping TypeName="ChatMasterModel.MESSAGEMAST">
+        <MappingFragment StoreEntitySet="MESSAGEMAST">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="TO_USER" ColumnName="TO_USER" />
+          <ScalarProperty Name="FROM_USER" ColumnName="FROM_USER" />
+          <ScalarProperty Name="MSG" ColumnName="MSG" />
+          <ScalarProperty Name="PARTIAL" ColumnName="PARTIAL" />
+          <ScalarProperty Name="SENDTIME" ColumnName="SENDTIME" />
+          <ScalarProperty Name="DELIVERED" ColumnName="DELIVERED" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ONLINEUSERS">
+      <EntityTypeMapping TypeName="ChatMasterModel.ONLINEUSER">
+        <MappingFragment StoreEntitySet="ONLINEUSERS">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="USERID" ColumnName="USERID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="USERINFOes">
+      <EntityTypeMapping TypeName="ChatMasterModel.USERINFO">
+        <MappingFragment StoreEntitySet="USERINFO">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="USER_NAME" ColumnName="USER_NAME" />
+          <ScalarProperty Name="LOGIN_ID" ColumnName="LOGIN_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CONNECTIONS">
+      <EntityTypeMapping TypeName="ChatMasterModel.CONNECTION">
+        <MappingFragment StoreEntitySet="CONNECTIONS">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="FROM_USER" ColumnName="FROM_USER" />
+          <ScalarProperty Name="TO_USER" ColumnName="TO_USER" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
