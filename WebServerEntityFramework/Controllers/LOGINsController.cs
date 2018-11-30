@@ -166,5 +166,11 @@ namespace WebServerEntityFramework.Controllers
             db.Entry(l).State = EntityState.Modified;
             db.SaveChanges();
         }
+
+        [HttpGet]
+        public string test()
+        {
+            return "test";
+        }
     }
 }

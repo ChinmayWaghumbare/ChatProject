@@ -101,3 +101,6 @@ F:\Project\WebServerEntityFramework\WebServerEntityFramework\obj\Debug\WebServer
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\obj\Debug\WebServerEntityFramework.csproj.CopyComplete
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\obj\Debug\WebServerEntityFramework.dll
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\obj\Debug\WebServerEntityFramework.pdb
+F:\Project\WebServerEntityFramework\WebServerEntityFramework\bin\System.Web.Cors.dll
+F:\Project\WebServerEntityFramework\WebServerEntityFramework\bin\System.Web.Http.Cors.dll
+F:\Project\WebServerEntityFramework\WebServerEntityFramework\bin\System.Web.Http.Cors.xml
