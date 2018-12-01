@@ -58,14 +58,14 @@ namespace WebServerEntityFramework.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!USERINFOExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                //if (!USERINFOExists(id))
+                //{
+                //    return NotFound();
+                //}
+                //else
+                //{
+                //    throw;
+                //}
             }
 
             return StatusCode(HttpStatusCode.NoContent);
