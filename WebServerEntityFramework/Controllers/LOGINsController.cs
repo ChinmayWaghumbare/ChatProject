@@ -132,17 +132,20 @@ namespace WebServerEntityFramework.Controllers
 
         }
 
+        [HttpGet]
         public int Login(LOGIN lgn)
         {
             int count = db.LOGINs.Count(s => s.UID == lgn.UID && s.UPWD == lgn.UPWD);
 
-            var data = db.LOGINs.Where(s => s.UID == lgn.UID && s.UPWD == lgn.UPWD).Select(s =>s);
-            LOGIN l = data.ToList<LOGIN>()[0];
-            if (l!=null)
-            {
-                return l.ID;    
-            }
+            //var data = db.LOGINs.Where(s => s.UID == lgn.UID && s.UPWD == lgn.UPWD).Select(s =>s);
+            //LOGIN l = data.ToList<LOGIN>()[0];
+            //if (l!=null)
+            //{
+            //    return l.ID;    
+            //}
 
+            if (count == 1)
+                return 1;
             return 0;
         }
 
@@ -157,14 +160,19 @@ namespace WebServerEntityFramework.Controllers
             return 0;
         }
 
-        public void updatePwd(LOGIN value,string old_pwd)
+        [HttpPut]
+        public void updatePwd(ChangePwd value)
         {
-            var data = db.LOGINs.Where(s => s.UID == value.UID && s.UPWD == old_pwd).Select(s => s);
-            LOGIN l = data.ToList<LOGIN>()[0];
+            var data = db.LOGINs.Where(s => s.UID == value.UID && s.UPWD == value.UPWD).Select(s => s).FirstOrDefault<LOGIN>();
+            if (data != null)
+            {
+                LOGIN l = data;
 
-            l.UPWD = old_pwd;
-            db.Entry(l).State = EntityState.Modified;
-            db.SaveChanges();
+                l.UPWD = value.newUPWD;
+                db.Entry(l).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            throw new Exception("Error to update Password.");
         }
 
         [HttpGet]

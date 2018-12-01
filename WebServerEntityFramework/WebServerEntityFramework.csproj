@@ -200,6 +200,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChangePwd.cs" />
     <Compile Include="Models\ChatMaster.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
