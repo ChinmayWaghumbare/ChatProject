@@ -96,7 +96,6 @@ F:\Project\WebServerEntityFramework\WebServerEntityFramework\bin\Microsoft.AI.De
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\bin\Microsoft.AI.WindowsServer.xml
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\bin\Microsoft.AI.Web.xml
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-F:\Project\WebServerEntityFramework\WebServerEntityFramework\obj\Debug\WebServerEntityFramework.csprojAssemblyReference.cache
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\obj\Debug\WebServerEntityFramework.csproj.CoreCompileInputs.cache
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\obj\Debug\WebServerEntityFramework.csproj.CopyComplete
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\obj\Debug\WebServerEntityFramework.dll
@@ -104,3 +103,4 @@ F:\Project\WebServerEntityFramework\WebServerEntityFramework\obj\Debug\WebServer
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\bin\System.Web.Cors.dll
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\bin\System.Web.Http.Cors.dll
 F:\Project\WebServerEntityFramework\WebServerEntityFramework\bin\System.Web.Http.Cors.xml
+F:\Project\WebServerEntityFramework\WebServerEntityFramework\obj\Debug\WebServerEntityFramework.csprojAssemblyReference.cache

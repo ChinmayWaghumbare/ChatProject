@@ -23,14 +23,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="ONLINEUSERS">
-      <EntityTypeMapping TypeName="ChatMasterModel.ONLINEUSER">
-        <MappingFragment StoreEntitySet="ONLINEUSERS">
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="USERID" ColumnName="USERID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="USERINFOes">
       <EntityTypeMapping TypeName="ChatMasterModel.USERINFO">
         <MappingFragment StoreEntitySet="USERINFO">
@@ -46,6 +38,14 @@
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="FROM_USER" ColumnName="FROM_USER" />
           <ScalarProperty Name="TO_USER" ColumnName="TO_USER" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ONLINEUSERS">
+      <EntityTypeMapping TypeName="ChatMasterModel.ONLINEUSER">
+        <MappingFragment StoreEntitySet="ONLINEUSERS">
+          <ScalarProperty Name="USERID" ColumnName="USERID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -29,8 +29,8 @@ namespace WebServerEntityFramework.Models
     
         public virtual DbSet<LOGIN> LOGINs { get; set; }
         public virtual DbSet<MESSAGEMAST> MESSAGEMASTs { get; set; }
-        public virtual DbSet<ONLINEUSER> ONLINEUSERS { get; set; }
         public virtual DbSet<USERINFO> USERINFOes { get; set; }
         public virtual DbSet<CONNECTION> CONNECTIONS { get; set; }
+        public virtual DbSet<ONLINEUSER> ONLINEUSERS { get; set; }
     }
 }

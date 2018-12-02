@@ -23,14 +23,6 @@
     <NavigationProperty Name="USERINFO" Relationship="Self.FK__MESSAGEMA__FROM___7F2BE32F" FromRole="MESSAGEMAST" ToRole="USERINFO" />
     <NavigationProperty Name="USERINFO1" Relationship="Self.FK__MESSAGEMA__TO_US__7E37BEF6" FromRole="MESSAGEMAST" ToRole="USERINFO" />
   </EntityType>
-  <EntityType Name="ONLINEUSER">
-    <Key>
-      <PropertyRef Name="ID" />
-    </Key>
-    <Property Name="ID" Type="Int32" Nullable="false" />
-    <Property Name="USERID" Type="Int32" Nullable="false" />
-    <NavigationProperty Name="USERINFO" Relationship="Self.FK__ONLINEUSE__USERI__7B5B524B" FromRole="ONLINEUSERS" ToRole="USERINFO" />
-  </EntityType>
   <EntityType Name="USERINFO">
     <Key>
       <PropertyRef Name="ID" />
@@ -41,7 +33,7 @@
     <NavigationProperty Name="LOGIN" Relationship="Self.FK__USERINFO__LOGIN___5FB337D6" FromRole="USERINFO" ToRole="LOGIN" />
     <NavigationProperty Name="MESSAGEMASTs" Relationship="Self.FK__MESSAGEMA__FROM___7F2BE32F" FromRole="USERINFO" ToRole="MESSAGEMAST" />
     <NavigationProperty Name="MESSAGEMASTs1" Relationship="Self.FK__MESSAGEMA__TO_US__7E37BEF6" FromRole="USERINFO" ToRole="MESSAGEMAST" />
-    <NavigationProperty Name="ONLINEUSERS" Relationship="Self.FK__ONLINEUSE__USERI__7B5B524B" FromRole="USERINFO" ToRole="ONLINEUSERS" />
+    <NavigationProperty Name="ONLINEUSERS" Relationship="ChatMasterModel.FK__ONLINEUSE__USERI__7B5B524B" FromRole="USERINFO" ToRole="ONLINEUSER" />
   </EntityType>
   <EntityType Name="CONNECTION">
     <Key>
@@ -87,22 +79,9 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__ONLINEUSE__USERI__7B5B524B">
-    <End Role="USERINFO" Type="Self.USERINFO" Multiplicity="1" />
-    <End Role="ONLINEUSERS" Type="Self.ONLINEUSER" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="USERINFO">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="ONLINEUSERS">
-        <PropertyRef Name="USERID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <EntityContainer Name="ChatMasterEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="LOGINs" EntityType="Self.LOGIN" />
     <EntitySet Name="MESSAGEMASTs" EntityType="Self.MESSAGEMAST" />
-    <EntitySet Name="ONLINEUSERS" EntityType="Self.ONLINEUSER" />
     <EntitySet Name="USERINFOes" EntityType="Self.USERINFO" />
     <EntitySet Name="CONNECTIONS" EntityType="Self.CONNECTION" />
     <AssociationSet Name="FK__USERINFO__LOGIN___5FB337D6" Association="Self.FK__USERINFO__LOGIN___5FB337D6">
@@ -117,9 +96,30 @@
       <End Role="USERINFO" EntitySet="USERINFOes" />
       <End Role="MESSAGEMAST" EntitySet="MESSAGEMASTs" />
     </AssociationSet>
-    <AssociationSet Name="FK__ONLINEUSE__USERI__7B5B524B" Association="Self.FK__ONLINEUSE__USERI__7B5B524B">
+    <EntitySet Name="ONLINEUSERS" EntityType="ChatMasterModel.ONLINEUSER" />
+    <AssociationSet Name="FK__ONLINEUSE__USERI__7B5B524B" Association="ChatMasterModel.FK__ONLINEUSE__USERI__7B5B524B">
       <End Role="USERINFO" EntitySet="USERINFOes" />
-      <End Role="ONLINEUSERS" EntitySet="ONLINEUSERS" />
+      <End Role="ONLINEUSER" EntitySet="ONLINEUSERS" />
     </AssociationSet>
   </EntityContainer>
+  <EntityType Name="ONLINEUSER">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="USERID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="USERINFO" Relationship="ChatMasterModel.FK__ONLINEUSE__USERI__7B5B524B" FromRole="ONLINEUSER" ToRole="USERINFO" />
+  </EntityType>
+  <Association Name="FK__ONLINEUSE__USERI__7B5B524B">
+    <End Type="ChatMasterModel.USERINFO" Role="USERINFO" Multiplicity="1" />
+    <End Type="ChatMasterModel.ONLINEUSER" Role="ONLINEUSER" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USERINFO">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ONLINEUSER">
+        <PropertyRef Name="USERID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

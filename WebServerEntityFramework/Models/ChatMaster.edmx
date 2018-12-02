@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ChatMasterModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ChatMasterModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <!--Errors Found During Generation:
 warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CONNECTIONS">
@@ -39,7 +39,7 @@ warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary 
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="USERID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="USERINFO">
@@ -127,8 +127,7 @@ warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary 
             <End Role="USERINFO" EntitySet="USERINFO" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ChatMasterModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -155,14 +154,6 @@ warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary 
           <NavigationProperty Name="USERINFO" Relationship="Self.FK__MESSAGEMA__FROM___7F2BE32F" FromRole="MESSAGEMAST" ToRole="USERINFO" />
           <NavigationProperty Name="USERINFO1" Relationship="Self.FK__MESSAGEMA__TO_US__7E37BEF6" FromRole="MESSAGEMAST" ToRole="USERINFO" />
         </EntityType>
-        <EntityType Name="ONLINEUSER">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="USERID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="USERINFO" Relationship="Self.FK__ONLINEUSE__USERI__7B5B524B" FromRole="ONLINEUSERS" ToRole="USERINFO" />
-        </EntityType>
         <EntityType Name="USERINFO">
           <Key>
             <PropertyRef Name="ID" />
@@ -173,7 +164,7 @@ warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary 
           <NavigationProperty Name="LOGIN" Relationship="Self.FK__USERINFO__LOGIN___5FB337D6" FromRole="USERINFO" ToRole="LOGIN" />
           <NavigationProperty Name="MESSAGEMASTs" Relationship="Self.FK__MESSAGEMA__FROM___7F2BE32F" FromRole="USERINFO" ToRole="MESSAGEMAST" />
           <NavigationProperty Name="MESSAGEMASTs1" Relationship="Self.FK__MESSAGEMA__TO_US__7E37BEF6" FromRole="USERINFO" ToRole="MESSAGEMAST" />
-          <NavigationProperty Name="ONLINEUSERS" Relationship="Self.FK__ONLINEUSE__USERI__7B5B524B" FromRole="USERINFO" ToRole="ONLINEUSERS" />
+          <NavigationProperty Name="ONLINEUSERS" Relationship="ChatMasterModel.FK__ONLINEUSE__USERI__7B5B524B" FromRole="USERINFO" ToRole="ONLINEUSER" />
         </EntityType>
         <EntityType Name="CONNECTION">
           <Key>
@@ -219,22 +210,9 @@ warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ONLINEUSE__USERI__7B5B524B">
-          <End Role="USERINFO" Type="Self.USERINFO" Multiplicity="1" />
-          <End Role="ONLINEUSERS" Type="Self.ONLINEUSER" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="USERINFO">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ONLINEUSERS">
-              <PropertyRef Name="USERID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="ChatMasterEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="LOGINs" EntityType="Self.LOGIN" />
           <EntitySet Name="MESSAGEMASTs" EntityType="Self.MESSAGEMAST" />
-          <EntitySet Name="ONLINEUSERS" EntityType="Self.ONLINEUSER" />
           <EntitySet Name="USERINFOes" EntityType="Self.USERINFO" />
           <EntitySet Name="CONNECTIONS" EntityType="Self.CONNECTION" />
           <AssociationSet Name="FK__USERINFO__LOGIN___5FB337D6" Association="Self.FK__USERINFO__LOGIN___5FB337D6">
@@ -249,11 +227,32 @@ warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary 
             <End Role="USERINFO" EntitySet="USERINFOes" />
             <End Role="MESSAGEMAST" EntitySet="MESSAGEMASTs" />
           </AssociationSet>
-          <AssociationSet Name="FK__ONLINEUSE__USERI__7B5B524B" Association="Self.FK__ONLINEUSE__USERI__7B5B524B">
+          <EntitySet Name="ONLINEUSERS" EntityType="ChatMasterModel.ONLINEUSER" />
+          <AssociationSet Name="FK__ONLINEUSE__USERI__7B5B524B" Association="ChatMasterModel.FK__ONLINEUSE__USERI__7B5B524B">
             <End Role="USERINFO" EntitySet="USERINFOes" />
-            <End Role="ONLINEUSERS" EntitySet="ONLINEUSERS" />
+            <End Role="ONLINEUSER" EntitySet="ONLINEUSERS" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="ONLINEUSER">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="USERID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="USERINFO" Relationship="ChatMasterModel.FK__ONLINEUSE__USERI__7B5B524B" FromRole="ONLINEUSER" ToRole="USERINFO" />
+        </EntityType>
+        <Association Name="FK__ONLINEUSE__USERI__7B5B524B">
+          <End Type="ChatMasterModel.USERINFO" Role="USERINFO" Multiplicity="1" />
+          <End Type="ChatMasterModel.ONLINEUSER" Role="ONLINEUSER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USERINFO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ONLINEUSER">
+              <PropertyRef Name="USERID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -282,14 +281,6 @@ warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ONLINEUSERS">
-            <EntityTypeMapping TypeName="ChatMasterModel.ONLINEUSER">
-              <MappingFragment StoreEntitySet="ONLINEUSERS">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="USERID" ColumnName="USERID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="USERINFOes">
             <EntityTypeMapping TypeName="ChatMasterModel.USERINFO">
               <MappingFragment StoreEntitySet="USERINFO">
@@ -305,6 +296,14 @@ warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary 
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="FROM_USER" ColumnName="FROM_USER" />
                 <ScalarProperty Name="TO_USER" ColumnName="TO_USER" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ONLINEUSERS">
+            <EntityTypeMapping TypeName="ChatMasterModel.ONLINEUSER">
+              <MappingFragment StoreEntitySet="ONLINEUSERS">
+                <ScalarProperty Name="USERID" ColumnName="USERID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

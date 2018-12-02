@@ -34,7 +34,7 @@ warning 6002: The table/view 'Project2.dbo.CONNECTIONS' does not have a primary 
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="USERID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="USERINFO">
