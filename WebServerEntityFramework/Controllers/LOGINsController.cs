@@ -116,8 +116,8 @@ namespace WebServerEntityFramework.Controllers
             return db.LOGINs.Count(e => e.ID == id) > 0;
         }
 
-
-        public Task<int> AddNewUser(LOGIN newUser)
+        [HttpPost]
+        public async Task<int> AddNewUser([FromBody]LOGIN newUser)
         {
             int count = db.LOGINs.Count(s => s.UID == newUser.UID);
             if (count > 0)
@@ -127,13 +127,22 @@ namespace WebServerEntityFramework.Controllers
             else
             {
                 db.LOGINs.Add(newUser);
-                return db.SaveChangesAsync();
+                int loginId = await db.SaveChangesAsync();
+                if (loginId > 0)
+                {
+                    USERINFO newUserInfo = new USERINFO();
+                    newUserInfo.LOGIN = newUser;
+
+                    new USERINFOController().AddUserInfo(newUserInfo);
+                }
+
+                return loginId;
             }
 
         }
 
-        [HttpGet]
-        public int Login(LOGIN lgn)
+        [HttpPost]
+        public int Login([FromBody]LOGIN lgn)
         {
             int count = db.LOGINs.Count(s => s.UID == lgn.UID && s.UPWD == lgn.UPWD);
 

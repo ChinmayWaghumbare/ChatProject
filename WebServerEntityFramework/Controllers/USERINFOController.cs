@@ -138,28 +138,30 @@ namespace WebServerEntityFramework.Controllers
             return Task.FromResult(0);
         }
 
-        public void updateUserInfo(USERINFO value)
+        public Task<int> updateUserInfo([FromUri]string oldUserName,[FromBody]USERINFO value)
         {
-            var data = db.USERINFOes.Where(s => s.LOGIN.UID == value.LOGIN.UID).Select(s => s).FirstOrDefault();
+            //var data = db.USERINFOes.Where(s => s.LOGIN.UID == value.LOGIN.UID).Select(s => s).FirstOrDefault();
+            var data = db.USERINFOes.Where(s => s.USER_NAME == oldUserName).Select(s => s).FirstOrDefault();
             if (data != null)
             {
                 data.USER_NAME = value.USER_NAME;
 
                 db.Entry(data).State = EntityState.Modified;
-                db.SaveChangesAsync();
+                return db.SaveChangesAsync();
             }
+            return Task.FromResult(0);
         }
 
         [HttpGet]
-        public USERINFO getUserInfo([FromUri]string uid)
+        public string getUserInfo([FromUri]string uid)
         {
             var data = db.USERINFOes.Include("LOGIN").Where(s => s.LOGIN.UID == uid).Select(s => s).FirstOrDefault();
             if (data != null)
             {
-                return data;
+                return data.USER_NAME;
             }
 
-            return new USERINFO();
+            return "";
                 
         }
     }
