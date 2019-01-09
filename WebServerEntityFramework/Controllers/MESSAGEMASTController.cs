@@ -160,5 +160,11 @@ namespace WebServerEntityFramework.Controllers
         {
             return db.MESSAGEMASTs.Include(s => s.USERINFO).Include(s => s.USERINFO1).Where(s => s.USERINFO1.USER_NAME == userName).Select(s => s).ToList();
         }
+
+        public void getMessageList(string userName)
+        {
+            var data = db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName).GroupBy(s => s.USERINFO.USER_NAME).Select(s=> s).ToList();
+
+        }
     }
 }
