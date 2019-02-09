@@ -24,5 +24,18 @@ namespace WebServerEntityFramework.Models
     
         public virtual USERINFO USERINFO { get; set; }
         public virtual USERINFO USERINFO1 { get; set; }
+
+
+
+        public MESSAGEMAST(MESSAGEMAST msg, string fromUser, string toUser)
+        {
+            msg.USERINFO.USER_NAME = fromUser;
+            msg.USERINFO1.USER_NAME = toUser;
+        }
+
+        public MESSAGEMAST()
+        {
+
+        }
     }
 }

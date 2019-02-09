@@ -156,15 +156,37 @@ namespace WebServerEntityFramework.Controllers
         //    return db.USERINFOes.Where(s => s.USER_NAME == userName).Select(s => s.MESSAGEMASTs1);
         //}
 
-        public List<MESSAGEMAST> getMessages(string userName)
+        public List<MESSAGEMAST> getMessages1(string userName)
         {
             return db.MESSAGEMASTs.Include(s => s.USERINFO).Include(s => s.USERINFO1).Where(s => s.USERINFO1.USER_NAME == userName).Select(s => s).ToList();
         }
 
-        public void getMessageList(string userName)
+        public List<MessageList> getMessageList(string userName)
         {
+            List<MessageList> msgList = new List<MessageList>();
             var data = db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName).GroupBy(s => s.USERINFO.USER_NAME).Select(s=> s).ToList();
+            foreach (var result in data)
+            {
+                MessageList msg = new MessageList();
+                msg.name = result.Key;
+                msg.count = 0;
+                foreach (var user in result)
+                {
+                    msg.count++;
+                }
+                msgList.Add(msg);
+            }
 
+            return msgList;
+        }
+
+        public List<MessageData> getMessages(string fromUser, string toUser)
+        {
+            return db.MESSAGEMASTs.Where(s => (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)).OrderByDescending(s => s.SENDTIME)
+                .Select(s => new MessageData { mesg=s,
+                                                fromUser=s.USERINFO.USER_NAME,
+                                                toUser= s.USERINFO1.USER_NAME})
+                                                .ToList<MessageData>();
         }
     }
 }
