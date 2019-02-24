@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -117,30 +116,18 @@ namespace WebServerEntityFramework.Controllers
         }
 
 
-        public Task<int> AddNewMsg(MESSAGEMAST value)
-        {
-            value.FROM_USER = db.USERINFOes.Where(s => s.USER_NAME == value.USERINFO.USER_NAME).Select(s => s.ID).FirstOrDefault();
-            value.TO_USER = db.USERINFOes.Where(s => s.USER_NAME == value.USERINFO1.USER_NAME).Select(s => s.ID).FirstOrDefault();
-            if (value.MSG.Length >250)
-            {
-                value.PARTIAL = true;
-            }
-            else
-            {
-                value.PARTIAL = false;
-            }
-            value.DELIVERED = false;
-            value.SENDTIME = DateTime.Now;
 
-            db.Entry(value).State = EntityState.Added;
-            return db.SaveChangesAsync();
+
+        public IQueryable<MESSAGEMAST> SendMsg(string fromUserName, string toUserName)
+        {
+            var data = db.MESSAGEMASTs.Where(s => s.USERINFO.USER_NAME == fromUserName && s.USERINFO1.USER_NAME == toUserName && s.DELIVERED == false).OrderBy(s=>s.SENDTIME).Select(s => s);
+            return data;
         }
 
-        public IQueryable<MESSAGEMAST> SendMsg(string fromUserName,string toUserName)
-        {
-            var data = db.MESSAGEMASTs.Where(s => s.USERINFO.USER_NAME == fromUserName && s.USERINFO1.USER_NAME == toUserName && s.DELIVERED==false).Select(s => s);
-                return data;
-        }
+        //public void sendMsg(string toUser)
+        //{
+
+        //}
 
         public void UpdateMsg(MESSAGEMAST value)
         {
@@ -180,13 +167,70 @@ namespace WebServerEntityFramework.Controllers
             return msgList;
         }
 
+        [HttpGet]
         public List<MessageData> getMessages(string fromUser, string toUser)
         {
-            return db.MESSAGEMASTs.Where(s => (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)).OrderByDescending(s => s.SENDTIME)
+            return db.MESSAGEMASTs.Where(s => (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)).OrderBy(s => s.SENDTIME)
                 .Select(s => new MessageData { mesg=s,
                                                 fromUser=s.USERINFO.USER_NAME,
                                                 toUser= s.USERINFO1.USER_NAME})
                                                 .ToList<MessageData>();
+        }
+
+        //public IHttpActionResult addNewMessage(string msgData, string fromUser, string toUser)
+        public IHttpActionResult addNewMessage(MessageData obj)
+        {
+
+            string msgData = obj.mesg.MSG;
+            int count= msgData.Length / 100;
+
+            int fromUserId = db.USERINFOes.Where(s => s.USER_NAME == obj.fromUser).Select(s => s.ID).FirstOrDefault();
+            int toUserId = db.USERINFOes.Where(s => s.USER_NAME == obj.toUser).Select(s => s.ID).FirstOrDefault();
+
+            List<MESSAGEMAST> dataToSend = new List<MESSAGEMAST>();
+            int i=0;
+            do
+            {
+                string msgPartial = string.Empty;
+                if (msgData.Length >= 100)
+                {
+
+                    msgPartial = msgData.Substring(i, 100);
+                    msgData = msgData.Substring(100);
+
+                    MESSAGEMAST msg = new MESSAGEMAST();
+                    msg.MSG = msgPartial;
+                    msg.FROM_USER = fromUserId;
+                    msg.TO_USER  = toUserId;
+                    msg.DELIVERED = false;
+                    msg.MSG_PARTIAL = true;
+                    msg.SENDTIME = DateTime.Now;
+
+
+                    dataToSend.Add(msg);
+                    count--;
+                }
+                else
+                {
+                    MESSAGEMAST msg = new MESSAGEMAST();
+                    msg.MSG = msgData;
+
+
+                    msg.FROM_USER = fromUserId;
+                    msg.TO_USER = toUserId;
+                    msg.DELIVERED = false;
+                    msg.MSG_PARTIAL = false;
+                    msg.SENDTIME = DateTime.Now;
+                    dataToSend.Add(msg);
+                    count--;
+                }
+
+            } while (count > 0);
+            foreach(MESSAGEMAST msg in dataToSend )
+                db.Entry(msg).State = EntityState.Added;
+            db.SaveChanges();
+
+           return Ok("Sent");
         }
     }
 }
