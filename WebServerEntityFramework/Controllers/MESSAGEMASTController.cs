@@ -128,13 +128,23 @@ namespace WebServerEntityFramework.Controllers
         //{
 
         //}
-
-        public void UpdateMsg(MESSAGEMAST value)
+        [HttpPut]
+        public void UpdateMsg(MessageData value)
         {
+            DateTime lastMsgTime = (DateTime)value.mesg.SENDTIME;
 
-            value.DELIVERED = true;
-            db.Entry(value).State = EntityState.Modified;
-            db.SaveChangesAsync();
+
+            var data = db.MESSAGEMASTs.Where(s => s.USERINFO.USER_NAME == value.fromUser & s.USERINFO1.USER_NAME == value.toUser & s.SENDTIME <= lastMsgTime & s.DELIVERED==false)
+                                    .Select(s => s)
+                                    .ToList();
+
+            foreach (MESSAGEMAST msg in data)
+            {
+                msg.DELIVERED = true;
+                db.Entry(msg).State = EntityState.Modified;
+
+                db.SaveChanges();
+            }
         }
 
         ////Use this when we want all messageList by using UserInfo Model
@@ -151,7 +161,7 @@ namespace WebServerEntityFramework.Controllers
         public List<MessageList> getMessageList(string userName)
         {
             List<MessageList> msgList = new List<MessageList>();
-            var data = db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName).GroupBy(s => s.USERINFO.USER_NAME).Select(s=> s).ToList();
+            var data = db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName & s.DELIVERED==false).GroupBy(s => s.USERINFO.USER_NAME).Select(s=> s).ToList();
             foreach (var result in data)
             {
                 MessageList msg = new MessageList();
@@ -170,10 +180,11 @@ namespace WebServerEntityFramework.Controllers
         [HttpGet]
         public List<MessageData> getMessages(string fromUser, string toUser)
         {
-            return db.MESSAGEMASTs.Where(s => (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)).OrderBy(s => s.SENDTIME)
+            return db.MESSAGEMASTs.Where(s => (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser) & s.DELIVERED==false).OrderBy(s => s.SENDTIME)
                 .Select(s => new MessageData { mesg=s,
                                                 fromUser=s.USERINFO.USER_NAME,
                                                 toUser= s.USERINFO1.USER_NAME})
+                                                .Take(10)
                                                 .ToList<MessageData>();
         }
 
