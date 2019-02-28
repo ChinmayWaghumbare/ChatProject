@@ -134,7 +134,7 @@ namespace WebServerEntityFramework.Controllers
             DateTime lastMsgTime = (DateTime)value.mesg.SENDTIME;
 
 
-            var data = db.MESSAGEMASTs.Where(s => s.USERINFO.USER_NAME == value.fromUser & s.USERINFO1.USER_NAME == value.toUser & s.SENDTIME <= lastMsgTime & s.DELIVERED==false)
+            var data = db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == value.fromUser & s.USERINFO1.USER_NAME == value.toUser) | (s.USERINFO1.USER_NAME == value.fromUser & s.USERINFO.USER_NAME == value.toUser))  & s.SENDTIME <= lastMsgTime & s.DELIVERED==false)
                                     .Select(s => s)
                                     .ToList();
 
@@ -161,15 +161,16 @@ namespace WebServerEntityFramework.Controllers
         public List<MessageList> getMessageList(string userName)
         {
             List<MessageList> msgList = new List<MessageList>();
-            var data = db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName & s.DELIVERED==false).GroupBy(s => s.USERINFO.USER_NAME).Select(s=> s).ToList();
+            var data = db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName).GroupBy(s => s.USERINFO.USER_NAME).Select(s=> s).ToList();
             foreach (var result in data)
             {
                 MessageList msg = new MessageList();
                 msg.name = result.Key;
                 msg.count = 0;
-                foreach (var user in result)
+                foreach (var msgData in result)
                 {
-                    msg.count++;
+                    if(msgData.DELIVERED==false)
+                       msg.count++;
                 }
                 msgList.Add(msg);
             }
@@ -180,7 +181,7 @@ namespace WebServerEntityFramework.Controllers
         [HttpGet]
         public List<MessageData> getMessages(string fromUser, string toUser)
         {
-            return db.MESSAGEMASTs.Where(s => (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser) & s.DELIVERED==false).OrderBy(s => s.SENDTIME)
+            return db.MESSAGEMASTs.Where(s =>( (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.DELIVERED==false).OrderBy(s => s.SENDTIME)
                 .Select(s => new MessageData { mesg=s,
                                                 fromUser=s.USERINFO.USER_NAME,
                                                 toUser= s.USERINFO1.USER_NAME})
@@ -188,6 +189,23 @@ namespace WebServerEntityFramework.Controllers
                                                 .ToList<MessageData>();
         }
 
+
+        [HttpGet]
+        public IEnumerable<MESSAGEMAST> getPrevMessages(MessageData msgData)
+        {
+            var data = db.MESSAGEMASTs.Where(s => s.SENDTIME <= msgData.mesg.SENDTIME)
+                                    .Select(s => s)
+                                    .OrderByDescending(s => s.SENDTIME)
+                                    .Take(10);
+
+            var data1 = data.Select(s => s)
+                            .OrderBy(s => s.SENDTIME)
+                            .AsEnumerable<MESSAGEMAST>();
+            return data1;
+            
+        }
+
+        
         //public IHttpActionResult addNewMessage(string msgData, string fromUser, string toUser)
         public IHttpActionResult addNewMessage(MessageData obj)
         {
