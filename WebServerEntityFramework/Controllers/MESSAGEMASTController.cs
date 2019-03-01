@@ -193,7 +193,7 @@ namespace WebServerEntityFramework.Controllers
         [HttpGet]
         public IEnumerable<MESSAGEMAST> getPrevMessages(MessageData msgData)
         {
-            var data = db.MESSAGEMASTs.Where(s => s.SENDTIME <= msgData.mesg.SENDTIME)
+            var data = db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == msgData.fromUser & s.USERINFO1.USER_NAME == msgData.toUser) | (s.USERINFO1.USER_NAME == msgData.fromUser & s.USERINFO.USER_NAME == msgData.toUser)) & s.SENDTIME <= msgData.mesg.SENDTIME)
                                     .Select(s => s)
                                     .OrderByDescending(s => s.SENDTIME)
                                     .Take(10);
