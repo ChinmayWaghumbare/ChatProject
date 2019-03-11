@@ -160,33 +160,80 @@ namespace WebServerEntityFramework.Controllers
 
         public List<MessageList> getMessageList(string userName)
         {
-            List<MessageList> msgList = new List<MessageList>();
-            var data = db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName).GroupBy(s => s.USERINFO.USER_NAME).Select(s=> s).ToList();
-            foreach (var result in data)
-            {
-                MessageList msg = new MessageList();
-                msg.name = result.Key;
-                msg.count = 0;
-                foreach (var msgData in result)
-                {
-                    if(msgData.DELIVERED==false)
-                       msg.count++;
-                }
-                msgList.Add(msg);
-            }
+            #region old code
+            //List<MessageList> msgList = new List<MessageList>();
+            //var data = db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName).GroupBy(s => s.USERINFO.USER_NAME).Select(s=> s).ToList();
+            //foreach (var result in data)
+            //{
+            //    MessageList msg = new MessageList();
+            //    msg.name = result.Key;
+            //    msg.count = 0;
+            //    foreach (var msgData in result)
+            //    {
+            //        if(msgData.DELIVERED==false)
+            //           msg.count++;
+            //    }
+            //    msgList.Add(msg);   
+            //}
 
-            return msgList;
+            //return msgList;
+            #endregion
+
+            return (db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName)
+                            .GroupBy(s => s.USERINFO.USER_NAME)
+                            .Select(group => new
+                            {
+                                msg_count = group.Count(),
+                                from_user = group.Key
+                            })
+            .Union(db.MESSAGEMASTs.Where(s => s.USERINFO.USER_NAME == userName)
+                                    .GroupBy(s => s.USERINFO1.USER_NAME)
+                                    .Select(group => new
+                                    {
+                                        msg_count = 0,
+                                        from_user = group.Key
+                                    }))
+            ).GroupBy(s => s.from_user)
+            .Select(s => new MessageList
+            {
+                count = s.Sum(s1 => s1.msg_count),
+                name = s.Key
+            }).ToList();
+
+            
         }
 
         [HttpGet]
         public List<MessageData> getMessages(string fromUser, string toUser)
         {
-            return db.MESSAGEMASTs.Where(s =>( (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.DELIVERED==false).OrderBy(s => s.SENDTIME)
-                .Select(s => new MessageData { mesg=s,
-                                                fromUser=s.USERINFO.USER_NAME,
-                                                toUser= s.USERINFO1.USER_NAME})
-                                                .Take(10)
-                                                .ToList<MessageData>();
+            //return db.MESSAGEMASTs.Where(s =>( (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.DELIVERED==false).OrderBy(s => s.SENDTIME)
+            //    .Select(s => new MessageData { mesg=s,
+            //                                    fromUser=s.USERINFO.USER_NAME,
+            //                                    toUser= s.USERINFO1.USER_NAME})
+            //                                    .Take(10)
+            //                                    .ToList<MessageData>();
+
+
+            var dataTime = db.MESSAGEMASTs.Where(s => s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser & s.DELIVERED == false)
+                                        .OrderBy(s => s.SENDTIME)
+                                        .Select(s => s.SENDTIME)
+                                        .FirstOrDefault();
+            if (dataTime != null)
+            {
+                DateTime Time = Convert.ToDateTime(dataTime.ToString());
+                return db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.SENDTIME >= Time).OrderBy(s => s.SENDTIME)
+                                       .Select(s => new MessageData
+                                                                {
+                                                                    mesg = s,
+                                                                    fromUser = s.USERINFO.USER_NAME,
+                                                                    toUser = s.USERINFO1.USER_NAME
+                                                                })
+                                                    .Take(10)
+                                                    .ToList<MessageData>();
+            }
+            
+            return new List<MessageData>();
+
         }
 
 
