@@ -134,7 +134,7 @@ namespace WebServerEntityFramework.Controllers
             DateTime lastMsgTime = (DateTime)value.mesg.SENDTIME;
 
 
-            var data = db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == value.fromUser & s.USERINFO1.USER_NAME == value.toUser) | (s.USERINFO1.USER_NAME == value.fromUser & s.USERINFO.USER_NAME == value.toUser))  & s.SENDTIME <= lastMsgTime & s.DELIVERED==false)
+            var data = db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == value.fromUser & s.USERINFO1.USER_NAME == value.toUser) )  & s.SENDTIME <= lastMsgTime & s.DELIVERED==false)
                                     .Select(s => s)
                                     .ToList();
 
@@ -179,7 +179,7 @@ namespace WebServerEntityFramework.Controllers
             //return msgList;
             #endregion
 
-            return (db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName)
+            return (db.MESSAGEMASTs.Where(s => s.USERINFO1.USER_NAME == userName & s.DELIVERED==false)
                             .GroupBy(s => s.USERINFO.USER_NAME)
                             .Select(group => new
                             {
