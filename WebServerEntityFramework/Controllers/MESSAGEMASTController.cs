@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -201,6 +202,22 @@ namespace WebServerEntityFramework.Controllers
             }).ToList();
 
             
+        }
+
+        [HttpGet]
+        public IEnumerable<MessageData> getNextMessages(string fromUser, string toUser, object lastMesgTime)
+        {
+            JObject obj = JObject.Parse(lastMesgTime.ToString());
+            DateTime Time = Convert.ToDateTime(obj["lastMesgTime"].ToString());
+            return db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.SENDTIME >= Time).OrderBy(s => s.SENDTIME)
+                                       .Select(s => new MessageData
+                                       {
+                                           mesg = s,
+                                           fromUser = s.USERINFO.USER_NAME,
+                                           toUser = s.USERINFO1.USER_NAME
+                                       })
+                                                    .Take(10)
+                                                    .ToList<MessageData>();
         }
 
         [HttpGet]
