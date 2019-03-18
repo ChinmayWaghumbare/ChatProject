@@ -18,7 +18,7 @@ namespace WebServerEntityFramework.Models
         public int TO_USER { get; set; }
         public int FROM_USER { get; set; }
         public string MSG { get; set; }
-        public Nullable<System.DateTime> SENDTIME { get; set; }
+        public DateTime SENDTIME { get; set; }
         public Nullable<bool> DELIVERED { get; set; }
         public Nullable<bool> MSG_PARTIAL { get; set; }
 
