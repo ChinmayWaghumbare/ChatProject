@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -205,19 +206,24 @@ namespace WebServerEntityFramework.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<MessageData> getNextMessages(string fromUser, string toUser, object lastMesgTime)
+        public IEnumerable<MessageData> getNextMessages(string fromUser, string toUser, string lastMesgTime)//object lastMesgTime)
         {
-            JObject obj = JObject.Parse(lastMesgTime.ToString());
-            DateTime Time = Convert.ToDateTime(obj["lastMesgTime"].ToString());
-            return db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.SENDTIME >= Time).OrderBy(s => s.SENDTIME)
+            //JObject obj = JObject.Parse(lastMesgTime.ToString());
+            //DateTime Time = Convert.ToDateTime(obj["lastMesgTime"].ToString());
+
+            DateTime Time = DateTime.ParseExact(lastMesgTime, "yyyy-MM-dd HH:mm:ss.fff",CultureInfo.InvariantCulture);
+
+
+
+            return db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.SENDTIME>Time).OrderBy(s => s.SENDTIME)
                                        .Select(s => new MessageData
                                        {
                                            mesg = s,
                                            fromUser = s.USERINFO.USER_NAME,
                                            toUser = s.USERINFO1.USER_NAME
                                        })
-                                                    .Take(10)
-                                                    .ToList<MessageData>();
+                                       .Take(10)
+                                       .ToList<MessageData>();
         }
 
         [HttpGet]
@@ -255,16 +261,25 @@ namespace WebServerEntityFramework.Controllers
 
 
         [HttpGet]
-        public IEnumerable<MESSAGEMAST> getPrevMessages(MessageData msgData)
+        public IEnumerable<MessageData> getPrevMessages(string fromUser, string toUser, string lastMesgTime)
         {
-            var data = db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == msgData.fromUser & s.USERINFO1.USER_NAME == msgData.toUser) | (s.USERINFO1.USER_NAME == msgData.fromUser & s.USERINFO.USER_NAME == msgData.toUser)) & s.SENDTIME <= msgData.mesg.SENDTIME)
-                                    .Select(s => s)
-                                    .OrderByDescending(s => s.SENDTIME)
-                                    .Take(10);
+            DateTime Time = DateTime.ParseExact(lastMesgTime, "yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
+
+
+
+            var data= db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.SENDTIME < Time).OrderBy(s => s.SENDTIME)
+                                       .Select(s => new MessageData
+                                       {
+                                           mesg = s,
+                                           fromUser = s.USERINFO.USER_NAME,
+                                           toUser = s.USERINFO1.USER_NAME
+                                       })
+                                       .Take(10)
+                                       .ToList<MessageData>();
 
             var data1 = data.Select(s => s)
-                            .OrderBy(s => s.SENDTIME)
-                            .AsEnumerable<MESSAGEMAST>();
+                            .OrderByDescending(s => s.mesg.SENDTIME)
+                            .AsEnumerable<MessageData>();
             return data1;
             
         }
