@@ -11,7 +11,7 @@ namespace WebServerEntityFramework.Models
 {
     using System;
     using System.Collections.Generic;
-
+    
     public partial class MESSAGEMAST
     {
         public int ID { get; set; }
@@ -21,10 +21,9 @@ namespace WebServerEntityFramework.Models
         public DateTime SENDTIME { get; set; }
         public Nullable<bool> DELIVERED { get; set; }
         public Nullable<bool> MSG_PARTIAL { get; set; }
-
+    
         public virtual USERINFO USERINFO { get; set; }
         public virtual USERINFO USERINFO1 { get; set; }
-
 
         public MESSAGEMAST(MESSAGEMAST msg, string fromUser, string toUser)
         {

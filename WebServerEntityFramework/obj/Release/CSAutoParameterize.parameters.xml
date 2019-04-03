@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="ChatMasterEntities-Web.config Connection String" description="ChatMasterEntities Connection String used in web.config by the application to access the database." defaultValue="metadata=res://*/Models.ChatMaster.csdl|res://*/Models.ChatMaster.ssdl|res://*/Models.ChatMaster.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=DESKTOP-B6NPK56\SA;initial catalog=Project2;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework&quot;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="E:\\Project\\WebServerEnitityFramework\\WebServerEntityFramework\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='ChatMasterEntities']/@connectionString" />
+  </parameter>
+</parameters>

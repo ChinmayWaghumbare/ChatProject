@@ -210,8 +210,8 @@ namespace WebServerEntityFramework.Controllers
         {
             //JObject obj = JObject.Parse(lastMesgTime.ToString());
             //DateTime Time = Convert.ToDateTime(obj["lastMesgTime"].ToString());
-
-            DateTime Time = DateTime.ParseExact(lastMesgTime, "yyyy-MM-dd HH:mm:ss.fff",CultureInfo.InvariantCulture);
+            lastMesgTime = lastMesgTime.Replace('T', ' ');
+            DateTime Time = DateTime.ParseExact(lastMesgTime, "yyyy-MM-dd HH:mm:ss.fffffff",CultureInfo.InvariantCulture);
 
 
 
@@ -229,41 +229,53 @@ namespace WebServerEntityFramework.Controllers
         [HttpGet]
         public List<MessageData> getMessages(string fromUser, string toUser)
         {
-            //return db.MESSAGEMASTs.Where(s =>( (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.DELIVERED==false).OrderBy(s => s.SENDTIME)
-            //    .Select(s => new MessageData { mesg=s,
-            //                                    fromUser=s.USERINFO.USER_NAME,
-            //                                    toUser= s.USERINFO1.USER_NAME})
-            //                                    .Take(10)
-            //                                    .ToList<MessageData>();
-
-
-            var dataTime = db.MESSAGEMASTs.Where(s => s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser & s.DELIVERED == false)
-                                        .OrderBy(s => s.SENDTIME)
-                                        .Select(s => s.SENDTIME)
-                                        .FirstOrDefault();
-            if (dataTime != null)
+            try
             {
-                DateTime Time = Convert.ToDateTime(dataTime.ToString());
-                return db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.SENDTIME >= Time).OrderBy(s => s.SENDTIME)
-                                       .Select(s => new MessageData
-                                                                {
-                                                                    mesg = s,
-                                                                    fromUser = s.USERINFO.USER_NAME,
-                                                                    toUser = s.USERINFO1.USER_NAME
-                                                                })
-                                                    .Take(10)
-                                                    .ToList<MessageData>();
+                //return db.MESSAGEMASTs.Where(s =>( (s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.DELIVERED==false).OrderBy(s => s.SENDTIME)
+                //    .Select(s => new MessageData { mesg=s,
+                //                                    fromUser=s.USERINFO.USER_NAME,
+                //                                    toUser= s.USERINFO1.USER_NAME})
+                //                                    .Take(10)
+                //                                    .ToList<MessageData>();
+
+
+                var dataTime = db.MESSAGEMASTs.Where(s => s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser & s.DELIVERED == false)
+                                            .OrderBy(s => s.SENDTIME)
+                                            .Select(s => s.SENDTIME)
+                                            .FirstOrDefault();
+                if (dataTime.Year < 2001)
+                {
+                    dataTime = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff"), "yyyy-MM-dd HH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                }
+
+                if (dataTime != null)
+                {
+                    DateTime Time = Convert.ToDateTime(dataTime.ToString());
+                    return db.MESSAGEMASTs.Where(s => ((s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser) | (s.USERINFO1.USER_NAME == fromUser & s.USERINFO.USER_NAME == toUser)) & s.SENDTIME >= Time).OrderBy(s => s.SENDTIME)
+                                           .Select(s => new MessageData
+                                                                    {
+                                                                        mesg = s,
+                                                                        fromUser = s.USERINFO.USER_NAME,
+                                                                        toUser = s.USERINFO1.USER_NAME
+                                                                    })
+                                                        .Take(10)
+                                                        .ToList<MessageData>();
+                }
             }
+            catch (Exception e) { }
+
             
+
             return new List<MessageData>();
 
         }
 
 
         [HttpGet]
-        public IEnumerable<MessageData> getPrevMessages(string fromUser, string toUser, string lastMesgTime)
+        public IEnumerable<MessageData> getPrevMessages(string fromUser, string toUser, string firstMsgSendTime)
         {
-            DateTime Time = DateTime.ParseExact(lastMesgTime, "yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
+            firstMsgSendTime=firstMsgSendTime.Replace('T',' ');
+            DateTime Time = DateTime.ParseExact(firstMsgSendTime, "yyyy-MM-dd HH:mm:ss.fffffff", CultureInfo.InvariantCulture);
 
 
 
@@ -288,7 +300,7 @@ namespace WebServerEntityFramework.Controllers
         //public IHttpActionResult addNewMessage(string msgData, string fromUser, string toUser)
         public IHttpActionResult addNewMessage(MessageData obj)
         {
-
+            string lastMsgTime = string.Empty;
             string msgData = obj.mesg.MSG;
             int count= msgData.Length / 100;
 
@@ -330,6 +342,7 @@ namespace WebServerEntityFramework.Controllers
                     msg.MSG_PARTIAL = false;
                     msg.SENDTIME = DateTime.Now;
                     dataToSend.Add(msg);
+                    lastMsgTime = msg.SENDTIME.ToString("yyyy-MM-dd HH:mm:ss.fffffff");
                     count--;
                 }
 
@@ -338,7 +351,10 @@ namespace WebServerEntityFramework.Controllers
                 db.Entry(msg).State = EntityState.Added;
             db.SaveChanges();
 
-           return Ok("Sent");
+            HubClass.PostToClient(obj.fromUser,obj.toUser);
+            
+
+            return Ok(lastMsgTime);
         }
     }
 }
