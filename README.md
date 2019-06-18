@@ -3,6 +3,6 @@
 
 Tasks
 
--Notify the perticular user
+- Notify the perticular user
 - Token Authentication
 - Make App online
