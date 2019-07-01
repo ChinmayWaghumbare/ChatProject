@@ -1,8 +1,8 @@
 
 -- --------------------------------------------------
--- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
+-- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 01/07/2019 00:27:50
+-- Date Created: 07/01/2019 09:40:19
 -- Generated from EDMX file: E:\Project\WebServerEnitityFramework\WebServerEntityFramework\Models\ChatMaster.edmx
 -- --------------------------------------------------
 
@@ -34,6 +34,12 @@ GO
 -- Dropping existing tables
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[CONNECTIONS]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[CONNECTIONS];
+GO
+IF OBJECT_ID(N'[dbo].[employee]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[employee];
+GO
 IF OBJECT_ID(N'[dbo].[LOGIN]', 'U') IS NOT NULL
     DROP TABLE [dbo].[LOGIN];
 GO
@@ -46,16 +52,13 @@ GO
 IF OBJECT_ID(N'[dbo].[USERINFO]', 'U') IS NOT NULL
     DROP TABLE [dbo].[USERINFO];
 GO
-IF OBJECT_ID(N'[dbo].[CONNECTIONS]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[CONNECTIONS];
-GO
 
 -- --------------------------------------------------
 -- Creating all tables
 -- --------------------------------------------------
 
 -- Creating table 'LOGINs'
-CREATE TABLE [dbo].[LOGIN] (
+CREATE TABLE [dbo].[LOGINs] (
     [ID] int IDENTITY(1,1) NOT NULL,
     [UID] varchar(20)  NULL,
     [UPWD] varchar(20)  NULL
@@ -63,19 +66,19 @@ CREATE TABLE [dbo].[LOGIN] (
 GO
 
 -- Creating table 'MESSAGEMASTs'
-CREATE TABLE [dbo].[MESSAGEMAST] (
+CREATE TABLE [dbo].[MESSAGEMASTs] (
     [ID] int IDENTITY(1,1) NOT NULL,
     [TO_USER] int  NOT NULL,
     [FROM_USER] int  NOT NULL,
     [MSG] varchar(200)  NULL,
-    [PARTIAL] bit  NULL,
     [SENDTIME] datetime  NULL,
-    [DELIVERED] bit  NULL
+    [DELIVERED] bit  NULL,
+    [MSG_PARTIAL] bit  NULL
 );
 GO
 
 -- Creating table 'USERINFOes'
-CREATE TABLE [dbo].[USERINFO] (
+CREATE TABLE [dbo].[USERINFOes] (
     [ID] int IDENTITY(1,1) NOT NULL,
     [USER_NAME] varchar(20)  NULL,
     [LOGIN_ID] int  NOT NULL
@@ -97,25 +100,33 @@ CREATE TABLE [dbo].[ONLINEUSERS] (
 );
 GO
 
+-- Creating table 'employees'
+CREATE TABLE [dbo].[employees] (
+    [code] nvarchar(10)  NOT NULL,
+    [age] int  NULL,
+    [gender] nvarchar(6)  NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
 
 -- Creating primary key on [ID] in table 'LOGINs'
-ALTER TABLE [dbo].[LOGIN]
-ADD CONSTRAINT [PK_LOGIN]
+ALTER TABLE [dbo].[LOGINs]
+ADD CONSTRAINT [PK_LOGINs]
     PRIMARY KEY CLUSTERED ([ID] ASC);
 GO
 
 -- Creating primary key on [ID] in table 'MESSAGEMASTs'
-ALTER TABLE [dbo].[MESSAGEMAST]
-ADD CONSTRAINT [PK_MESSAGEMAST]
+ALTER TABLE [dbo].[MESSAGEMASTs]
+ADD CONSTRAINT [PK_MESSAGEMASTs]
     PRIMARY KEY CLUSTERED ([ID] ASC);
 GO
 
 -- Creating primary key on [ID] in table 'USERINFOes'
-ALTER TABLE [dbo].[USERINFO]
-ADD CONSTRAINT [PK_USERINFO]
+ALTER TABLE [dbo].[USERINFOes]
+ADD CONSTRAINT [PK_USERINFOes]
     PRIMARY KEY CLUSTERED ([ID] ASC);
 GO
 
@@ -131,49 +142,58 @@ ADD CONSTRAINT [PK_ONLINEUSERS]
     PRIMARY KEY CLUSTERED ([ID] ASC);
 GO
 
+-- Creating primary key on [code] in table 'employees'
+ALTER TABLE [dbo].[employees]
+ADD CONSTRAINT [PK_employees]
+    PRIMARY KEY CLUSTERED ([code] ASC);
+GO
+
 -- --------------------------------------------------
 -- Creating all FOREIGN KEY constraints
 -- --------------------------------------------------
 
 -- Creating foreign key on [LOGIN_ID] in table 'USERINFOes'
-ALTER TABLE [dbo].[USERINFO]
+ALTER TABLE [dbo].[USERINFOes]
 ADD CONSTRAINT [FK__USERINFO__LOGIN___5FB337D6]
     FOREIGN KEY ([LOGIN_ID])
-    REFERENCES [dbo].[LOGIN]
+    REFERENCES [dbo].[LOGINs]
         ([ID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK__USERINFO__LOGIN___5FB337D6'
 CREATE INDEX [IX_FK__USERINFO__LOGIN___5FB337D6]
-ON [dbo].[USERINFO]
+ON [dbo].[USERINFOes]
     ([LOGIN_ID]);
 GO
 
 -- Creating foreign key on [FROM_USER] in table 'MESSAGEMASTs'
-ALTER TABLE [dbo].[MESSAGEMAST]
+ALTER TABLE [dbo].[MESSAGEMASTs]
 ADD CONSTRAINT [FK__MESSAGEMA__FROM___7F2BE32F]
     FOREIGN KEY ([FROM_USER])
-    REFERENCES [dbo].[USERINFO]
+    REFERENCES [dbo].[USERINFOes]
         ([ID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK__MESSAGEMA__FROM___7F2BE32F'
 CREATE INDEX [IX_FK__MESSAGEMA__FROM___7F2BE32F]
-ON [dbo].[MESSAGEMAST]
+ON [dbo].[MESSAGEMASTs]
     ([FROM_USER]);
 GO
 
 -- Creating foreign key on [TO_USER] in table 'MESSAGEMASTs'
-ALTER TABLE [dbo].[MESSAGEMAST]
+ALTER TABLE [dbo].[MESSAGEMASTs]
 ADD CONSTRAINT [FK__MESSAGEMA__TO_US__7E37BEF6]
     FOREIGN KEY ([TO_USER])
-    REFERENCES [dbo].[USERINFO]
+    REFERENCES [dbo].[USERINFOes]
         ([ID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK__MESSAGEMA__TO_US__7E37BEF6'
 CREATE INDEX [IX_FK__MESSAGEMA__TO_US__7E37BEF6]
-ON [dbo].[MESSAGEMAST]
+ON [dbo].[MESSAGEMASTs]
     ([TO_USER]);
 GO
 
@@ -181,12 +201,17 @@ GO
 ALTER TABLE [dbo].[ONLINEUSERS]
 ADD CONSTRAINT [FK__ONLINEUSE__USERI__7B5B524B]
     FOREIGN KEY ([USERID])
-    REFERENCES [dbo].[USERINFO]
+    REFERENCES [dbo].[USERINFOes]
         ([ID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK__ONLINEUSE__USERI__7B5B524B'
 CREATE INDEX [IX_FK__ONLINEUSE__USERI__7B5B524B]
 ON [dbo].[ONLINEUSERS]
     ([USERID]);
 GO
+
+-- --------------------------------------------------
+-- Script has ended
+-- --------------------------------------------------
