@@ -17,6 +17,11 @@ namespace WebServerEntityFramework.Controllers
     {
         private ChatMasterEntities db = new ChatMasterEntities();
 
+
+        public string test1()
+        {
+            return "Test";
+        }
         // GET: api/LOGINs
         public IQueryable<LOGIN> GetLOGINs()
         {

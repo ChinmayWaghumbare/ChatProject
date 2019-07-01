@@ -241,7 +241,7 @@ namespace WebServerEntityFramework.Controllers
 
                 var dataTime = db.MESSAGEMASTs.Where(s => s.USERINFO.USER_NAME == fromUser & s.USERINFO1.USER_NAME == toUser & s.DELIVERED == false)
                                             .OrderBy(s => s.SENDTIME)
-                                            .Select(s => s.SENDTIME)
+                                            .Select(s => (DateTime)s.SENDTIME)
                                             .FirstOrDefault();
                 if (dataTime.Year < 2001)
                 {
@@ -302,7 +302,7 @@ namespace WebServerEntityFramework.Controllers
         {
             string lastMsgTime = string.Empty;
             string msgData = obj.mesg.MSG;
-            int count= msgData.Length / 100;
+            int count= msgData.Length / 100+1;
 
             int fromUserId = db.USERINFOes.Where(s => s.USER_NAME == obj.fromUser).Select(s => s.ID).FirstOrDefault();
             int toUserId = db.USERINFOes.Where(s => s.USER_NAME == obj.toUser).Select(s => s.ID).FirstOrDefault();

@@ -66,8 +66,8 @@ E:\Project\WebServerEnitityFramework\WebServerEntityFramework\bin\Microsoft.AspN
 E:\Project\WebServerEnitityFramework\WebServerEntityFramework\bin\Microsoft.AI.DependencyCollector.xml
 E:\Project\WebServerEnitityFramework\WebServerEntityFramework\bin\Microsoft.AI.WindowsServer.xml
 E:\Project\WebServerEnitityFramework\WebServerEntityFramework\bin\Microsoft.AI.Web.xml
+E:\Project\WebServerEnitityFramework\WebServerEntityFramework\obj\Release\WebServerEntityFramework.csprojAssemblyReference.cache
 E:\Project\WebServerEnitityFramework\WebServerEntityFramework\obj\Release\WebServerEntityFramework.csproj.CoreCompileInputs.cache
 E:\Project\WebServerEnitityFramework\WebServerEntityFramework\obj\Release\WebServerEntityFramework.csproj.CopyComplete
 E:\Project\WebServerEnitityFramework\WebServerEntityFramework\obj\Release\WebServerEntityFramework.dll
 E:\Project\WebServerEnitityFramework\WebServerEntityFramework\obj\Release\WebServerEntityFramework.pdb
-E:\Project\WebServerEnitityFramework\WebServerEntityFramework\obj\Release\WebServerEntityFramework.csprojAssemblyReference.cache

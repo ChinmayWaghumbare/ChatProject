@@ -101,6 +101,7 @@
       <End Role="USERINFO" EntitySet="USERINFOes" />
       <End Role="ONLINEUSER" EntitySet="ONLINEUSERS" />
     </AssociationSet>
+    <EntitySet Name="employees" EntityType="ChatMasterModel.employee" />
   </EntityContainer>
   <EntityType Name="ONLINEUSER">
     <Key>
@@ -122,4 +123,12 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="employee">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="age" Type="Int32" />
+    <Property Name="gender" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+  </EntityType>
 </Schema>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="Default Web Site/Webserver" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^E:\\Project\\WebServerEnitityFramework\\WebServerEntityFramework\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^E:\\Project\\WebServerEnitityFramework\\WebServerEntityFramework\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="ChatMasterEntities-Web.config Connection String" description="" value="metadata=res://*/Models.ChatMaster.csdl|res://*/Models.ChatMaster.ssdl|res://*/Models.ChatMaster.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=DESKTOP-B6NPK56\SA;Initial Catalog=Project2;User ID=sa;Password=Chinmay@123&quot;" tags="">
+    <parameterEntry kind="XmlFile" scope="E:\\Project\\WebServerEnitityFramework\\WebServerEntityFramework\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='ChatMasterEntities']/@connectionString" />
+  </parameter>
+</parameters>
