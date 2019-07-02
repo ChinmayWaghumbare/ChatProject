@@ -18,6 +18,8 @@ namespace WebServerEntityFramework.Models
         public ChatMasterEntities()
             : base("name=ChatMasterEntities")
         {
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

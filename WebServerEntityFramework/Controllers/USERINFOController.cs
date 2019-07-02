@@ -17,9 +17,9 @@ namespace WebServerEntityFramework.Controllers
         private ChatMasterEntities db = new ChatMasterEntities();
 
         // GET: api/USERINFO
-        public IQueryable<USERINFO> GetUSERINFOes()
+        public IQueryable<string> GetUSERINFOes()
         {
-            return db.USERINFOes;
+            return db.USERINFOes.Select(s=>s.USER_NAME);
         }
 
         // GET: api/USERINFO/5
