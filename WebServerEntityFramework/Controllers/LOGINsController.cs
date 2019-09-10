@@ -138,7 +138,7 @@ namespace WebServerEntityFramework.Controllers
                     USERINFO newUserInfo = new USERINFO();
                     newUserInfo.LOGIN = newUser;
 
-                    await new USERINFOController().AddUserInfo(newUserInfo);
+                    await USERINFOController.AddUserInfo(newUserInfo);
                 }
 
                 return loginId;

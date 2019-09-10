@@ -14,7 +14,7 @@ namespace WebServerEntityFramework.Controllers
 {
     public class USERINFOController : ApiController
     {
-        private ChatMasterEntities db = new ChatMasterEntities();
+        private static ChatMasterEntities db = new ChatMasterEntities();
 
         // GET: api/USERINFO
         public IQueryable<string> GetUSERINFOes()
@@ -110,13 +110,13 @@ namespace WebServerEntityFramework.Controllers
             base.Dispose(disposing);
         }
 
-        private bool USERINFOExists(string userName,int loginId)
+        private static bool USERINFOExists(string userName,int loginId)
         {
             return db.USERINFOes.Count(e => e.USER_NAME == userName && e.LOGIN_ID==loginId) > 0;
         }
 
 
-        public Task<int> AddUserInfo(USERINFO newUserInfo)
+        public static Task<int> AddUserInfo(USERINFO newUserInfo)
         {
             //newUserInfo.USER_NAME = "User" + new Random(1000);
             int count = 1;// = db.USERINFOes.Count(s => s.USER_NAME == newUserInfo.USER_NAME);
